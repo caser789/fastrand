@@ -28,6 +28,15 @@ func (r *RNG) Uint32() uint32 {
 	return x
 }
 
+// Uint32n returns pseudorandom uint32 in the range [0..maxN).
+//
+// It is unsafe to call this method from concurrent goroutines.
+func (r *RNG) Uint32n(maxN uint32) uint32 {
+	x := r.Uint32()
+	// See http://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+	return uint32((uint64(x) * uint64(maxN)) >> 32)
+}
+
 // Seed sets the r state to n.
 func (r *RNG) Seed(n uint32) {
 	r.x = n
