@@ -28,6 +28,11 @@ func (r *RNG) Uint32() uint32 {
 	return x
 }
 
+// Seed sets the r state to n.
+func (r *RNG) Seed(n uint32) {
+	r.x = n
+}
+
 func getRandomUint32() uint32 {
 	x := time.Now().UnixNano()
 	return uint32((x >> 32) ^ x)
