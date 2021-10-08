@@ -54,3 +54,14 @@ func TestRNGUint32n(t *testing.T) {
 		}
 	}
 }
+
+func TestUint32(t *testing.T) {
+	m := make(map[uint32]struct{})
+	for i := 0; i < 1e6; i++ {
+		n := Uint32()
+		if _, ok := m[n]; ok {
+			t.Fatalf("number %v already exists", n)
+		}
+		m[n] = struct{}{}
+	}
+}

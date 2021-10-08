@@ -1,6 +1,7 @@
 package fastrand
 
 import (
+	"sync"
 	"time"
 )
 
@@ -45,4 +46,20 @@ func (r *RNG) Seed(n uint32) {
 func getRandomUint32() uint32 {
 	x := time.Now().UnixNano()
 	return uint32((x >> 32) ^ x)
+}
+
+var rngPool sync.Pool
+
+// Uint32 returns pseudorandom uint32.
+//
+// It is safe calling this function from concurrent goroutines.
+func Uint32() uint32 {
+	v := rngPool.Get()
+	if v == nil {
+		v = &RNG{}
+	}
+	r := v.(*RNG)
+	x := r.Uint32()
+	rngPool.Put(r)
+	return x
 }
